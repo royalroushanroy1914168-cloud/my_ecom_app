@@ -37,14 +37,79 @@
 
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-commerce App</title>
 
-     
-   
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: white;
+    }
 
+    /* TOP BAR */
+    .topbar {
+      background-color: #2196F3;
+      padding: 15px;
+      display: flex;
+      justify-content: flex-end; /* ONLY right side */
+      align-items: center;
+      color: black;
+    }
+
+    /* SETTINGS ICON */
+    .settings {
+      font-size: 30px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* MAIN CONTENT */
+    .content {
+      height: calc(100vh - 140px);
+      padding: 20px;
+      font-size: 22px;
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      border-top: 1px solid #ccc;
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-around;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .bottom-nav a:hover {
+      color: #2196F3;
+    }
+  </style>
 </head>
 <body>
 
-  
+  <!-- TOP BAR WITH ONLY SETTINGS ICON -->
+  <div class="topbar">
+    <div class="settings">⚙️</div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+    Welcome to the Home Page!
+  </div>
 
   <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav">
@@ -52,12 +117,19 @@
     <a href="#">Account</a>
     <a href="#">Cart</a>
     <a href="#">Categories</a>
-     <a href="#">Settings</a>
   </div>
 
 </body>
 </html>
 
+
+
+
+
+
+
+     
+   
 
 
  
