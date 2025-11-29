@@ -1,196 +1,411 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My E-commerce App</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cart — Demo</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; }
+    :root{
+      --brand:#1976d2;
+      --accent:#ffb300;
+      --muted:#6b7280;
+      --card:#fff;
+      --bg:#f3f4f6;
+      --radius:12px;
+      --mobile-width:420px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, "Helvetica Neue", Arial, sans-serif;
+      background:var(--bg);
+      color:#111827;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* container simulating mobile width */
+    .frame{
+      width:100%;
+      max-width:var(--mobile-width);
+      margin:0 auto;
+      background:transparent;
+      min-height:100vh;
+      padding-bottom:110px; /* room for sticky footer */
+    }
 
     header {
-      background: #1976d2;
-      padding: 15px;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 20px;
+      padding:16px;
+      background:#fff;
+      border-bottom:1px solid #e6e6e6;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .title { font-size:18px; font-weight:600; }
+
+    /* tabs */
+    .tabs{
+      display:flex;
+      gap:24px;
+      padding:14px 16px;
+      background:#fff;
+      align-items:center;
+      border-bottom:1px solid #eee;
+    }
+    .tab{
+      font-weight:600;
+      color:var(--brand);
+      position:relative;
+      padding-bottom:8px;
+    }
+    .tab.inactive{ color:#111827; opacity:0.8; font-weight:500; }
+    .tab.active::after{
+      content:'';
+      position:absolute;
+      left:0; right:0;
+      bottom:0;
+      height:3px;
+      background:var(--brand);
+      border-radius:4px;
     }
 
-    .cart-btn {
-      background: #fff;
-      color: #1976d2;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
+    /* delivery row */
+    .delivery{
+      background:#fff;
+      padding:12px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      border-bottom:1px solid #eee;
+    }
+    .delivery .line{ display:flex; align-items:center; gap:10px; }
+    .delivery .small{ color:var(--muted); font-size:13px; }
+    .change{
+      margin-left:auto;
+      background:#f3f4f8;
+      padding:6px 8px;
+      border-radius:8px;
+      border:1px solid #e6e6e6;
+      font-size:13px;
     }
 
-    .cart-btn span {
-      background: #1976d2;
-      color: #fff;
-      padding: 3px 8px;
-      margin-left: 8px;
-      border-radius: 50%;
+    /* product card */
+    .product{
+      background:var(--card);
+      margin:12px 12px;
+      padding:14px;
+      border-radius:var(--radius);
+      box-shadow:0 2px 6px rgba(2,6,23,0.04);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .thumb{
+      width:86px;
+      height:86px;
+      border-radius:8px;
+      background:linear-gradient(180deg,#eef2ff,#fff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid #eef2ff;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .meta{ flex:1; }
+    .meta h3{ margin:0; font-size:16px; font-weight:700; }
+    .meta .sub{ color:var(--muted); font-size:13px; margin-top:6px; }
+
+    /* rating & price row */
+    .rating{ display:flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; color: #10b981; }
+    .price-row{ margin-top:10px; display:flex; align-items:flex-end; justify-content:space-between; gap:8px; }
+    .price-left{ display:flex; flex-direction:column; gap:6px; }
+    .price {
+      font-size:18px; font-weight:800;
+    }
+    .old-price{ color:var(--muted); text-decoration:line-through; margin-left:8px; font-weight:600; font-size:14px; }
+    .discount{ color:#059669; font-weight:700; margin-right:8px; }
+
+    /* qty + actions */
+    .controls{ margin-top:8px; display:flex; align-items:center; gap:10px; }
+    .qty-select{
+      border:1px solid #e6e6e6;
+      background:#fff;
+      padding:8px;
+      border-radius:8px;
+      font-weight:600;
+    }
+    .actions{
+      display:flex;
+      gap:6px;
+      margin-top:12px;
+      border-top:1px solid #f1f5f9;
+      padding-top:10px;
+    }
+    .action-btn{
+      flex:1;
+      padding:8px;
+      background:#fff;
+      border-radius:8px;
+      border:1px solid #e6e6e6;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .action-btn.buy{ background:var(--brand); color:#fff; border:none; }
+
+    /* insurance banner */
+    .insurance{
+      background:#fff;
+      margin:12px;
+      padding:12px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      box-shadow:0 1px 3px rgba(2,6,23,0.04);
+    }
+    .insurance .add{
+      margin-left:auto;
+      background:var(--brand);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
     }
 
-    .products {
-      padding: 20px;
+    /* bottom sticky bar */
+    .sticky-bar{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      display:flex;
+      justify-content:center;
+      padding:10px 0;
+      background:transparent;
+      pointer-events:none;
+    }
+    .sticky-inner{
+      width:100%;
+      max-width:var(--mobile-width);
+      background:#fff;
+      margin:0 auto;
+      border-radius:14px 14px 0 0;
+      box-shadow:0 -6px 30px rgba(2,6,23,0.08);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      pointer-events:auto;
+    }
+    .totals{ flex:1; display:flex; flex-direction:column; gap:6px; }
+    .orig{ color:var(--muted); text-decoration:line-through; font-size:13px; }
+    .final{ font-weight:800; font-size:20px; display:flex; align-items:center; gap:8px; }
+    .place{
+      background:var(--accent);
+      color:#111;
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:800;
+      cursor:pointer;
     }
 
-    .product {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    /* bottom nav */
+    .bottom-nav{
+      display:flex;
+      gap:12px;
+      justify-content:space-around;
+      align-items:center;
+      background:#fff;
+      margin-top:8px;
+      padding:8px 6px;
+      border-radius:10px;
+      border:1px solid #f1f5f9;
+      width:100%;
     }
+    .nav-item{ font-size:12px; color:var(--muted); text-align:center; }
 
-    button {
-      background: #1976d2;
-      color: #fff;
-      padding: 8px 12px;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      margin-top: 8px;
-    }
-
-    /* CART BOX */
-    #cartBox {
-      position: fixed;
-      right: 0;
-      top: 0;
-      width: 300px;
-      height: 100%;
-      background: #fff;
-      box-shadow: -4px 0 20px rgba(0,0,0,0.2);
-      padding: 15px;
-      transform: translateX(100%);
-      transition: 0.3s;
-      overflow-y: auto;
-    }
-
-    .cart-item {
-      border-bottom: 1px solid #ccc;
-      padding: 8px 0;
-    }
-
-    .qty-btn {
-      padding: 4px 8px;
-      margin: 0 3px;
-    }
-
-    .close-btn {
-      background: red;
-      color: #fff;
-      padding: 6px 12px;
-      border: none;
-      cursor: pointer;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
+    /* responsive small text */
+    .small{ font-size:13px; color:var(--muted); }
   </style>
 </head>
-
 <body>
+  <div class="frame">
 
-<header>
-  My E-commerce App
-  <div class="cart-btn" onclick="openCart()">Cart <span id="cartCount">0</span></div>
-</header>
+    <header>
+      <div style="display:flex;flex-direction:column;">
+        <div class="title">My Cart</div>
+      </div>
+    </header>
 
-<div class="products">
-  <h2>Products</h2>
+    <div class="tabs" role="tablist" aria-label="cart tabs">
+      <div class="tab active">Flipkart <span style="color:var(--brand)">(21)</span></div>
+      <div class="tab inactive">Minutes <span style="color:#111">(3)</span></div>
+    </div>
 
-  <div class="product">
-    <h3>Phone A</h3>
-    <p>₹9,999</p>
-    <button onclick="addToCart('Phone A', 9999)">Add to Cart</button>
+    <div class="delivery" aria-hidden="false">
+      <div class="line">
+        <strong>Deliver to:</strong>
+        <div style="margin-left:6px;">Rous..., 815314</div>
+        <div class="change">Change</div>
+      </div>
+      <div class="small">Asko Deori Giridih Jharkhand, Near ...</div>
+    </div>
+
+    <!-- Product list (repeatable) -->
+    <div id="productList">
+      <!-- single example product -->
+      <div class="product" data-id="p1">
+        <div class="thumb">IMG</div>
+        <div class="meta">
+          <h3>Elista ELS WK-710 Wired USB Keyboard</h3>
+          <div class="sub small">Black</div>
+
+          <div class="rating" aria-hidden="true">
+            <span style="font-size:14px; color:#10b981;">★ ★ ★ ★ ☆</span>
+            <span style="color:var(--muted); font-weight:600; font-size:13px;">4.0 (26,219)</span>
+          </div>
+
+          <div class="price-row">
+            <div class="price-left">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="discount">↓61%</div>
+                <div class="price">₹266</div>
+                <div class="old-price">₹699</div>
+              </div>
+              <div class="small">WOW! Buy at <strong>₹216</strong></div>
+              <div class="small" style="margin-top:6px;color:#6b7280;">Delivery by Dec 8, Mon</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <select class="qty-select" data-for="p1" aria-label="Quantity">
+                <option value="1">Qty: 1</option>
+                <option value="2">Qty: 2</option>
+                <option value="3">Qty: 3</option>
+                <option value="4">Qty: 4</option>
+              </select>
+
+              <div style="font-size:12px;color:var(--muted);">Offers: 19</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="action-btn remove-btn" data-for="p1">Remove</button>
+            <button class="action-btn">Save for later</button>
+            <button class="action-btn buy">Buy this now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- You can duplicate/insert more product blocks here to simulate more items (Flipkart (21)) -->
+    </div>
+
+    <!-- Insurance Banner -->
+    <div class="insurance">
+      <div style="font-weight:700">Digital Suraksha Group Insurance</div>
+      <div class="small">Digital Suraksha for Rs 50,000 by Bajaj Allianz · ₹183 · 1 Year</div>
+      <button class="add" onclick="addInsurance()">Add</button>
+    </div>
+
+    <!-- Bottom sticky totals -->
+    <div class="sticky-bar" aria-hidden="false">
+      <div class="sticky-inner">
+        <div class="totals">
+          <div class="orig small" id="origTotal">1,23,294</div>
+          <div class="final">
+            <div id="finalTotal">₹26,540</div>
+          </div>
+        </div>
+
+        <button class="place" id="placeOrder">Place order</button>
+      </div>
+    </div>
+
+    <!-- bottom nav -->
+    <div style="padding:12px;">
+      <div class="bottom-nav">
+        <div class="nav-item">Home</div>
+        <div class="nav-item">Play</div>
+        <div class="nav-item">Categories</div>
+        <div class="nav-item">Account</div>
+        <div class="nav-item">Cart <span style="background:var(--brand);color:#fff;padding:2px 6px;border-radius:999px;margin-left:6px;font-weight:700;">24</span></div>
+      </div>
+    </div>
+
   </div>
-
-  <div class="product">
-    <h3>Shoes</h3>
-    <p>₹1,299</p>
-    <button onclick="addToCart('Shoes', 1299)">Add to Cart</button>
-  </div>
-
-  <div class="product">
-    <h3>Earbuds</h3>
-    <p>₹1,799</p>
-    <button onclick="addToCart('Earbuds', 1799)">Add to Cart</button>
-  </div>
-</div>
-
-<!-- CART DRAWER -->
-<div id="cartBox">
-  <button class="close-btn" onclick="closeCart()">Close</button>
-  <h2>Your Cart</h2>
-  <div id="cartItems"></div>
-  <h3>Total: ₹<span id="cartTotal">0</span></h3>
-</div>
 
 <script>
-  let cart = [];
+  /* Demo data for product prices (match product elements by data-id) */
+  const PRODUCTS = {
+    p1: { price: 266, old: 699, qty: 1 },
+    // add more if you duplicate product blocks (p2, p3 ...)
+  };
 
-  function addToCart(name, price) {
-    let existing = cart.find(item => item.name === name);
-
-    if (existing) {
-      existing.qty++;
-    } else {
-      cart.push({ name, price, qty: 1 });
-    }
-
-    updateCart();
+  function fmt(v){
+    // small formatter for rupee with thousands
+    return '₹' + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  function updateCart() {
-    const cartItems = document.getElementById("cartItems");
-    const cartCount = document.getElementById("cartCount");
-    const cartTotal = document.getElementById("cartTotal");
-
-    cartItems.innerHTML = "";
-    let total = 0;
-    let count = 0;
-
-    cart.forEach((item, index) => {
-      total += item.price * item.qty;
-      count += item.qty;
-
-      cartItems.innerHTML += `
-        <div class="cart-item">
-          <strong>${item.name}</strong><br>
-          ₹${item.price} x ${item.qty}<br>
-          <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-          <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-          <button style="color:red" onclick="removeItem(${index})">Remove</button>
-        </div>
-      `;
+  function recalcTotals(){
+    // subtotal from product blocks
+    let subtotal = 0;
+    Object.keys(PRODUCTS).forEach(id=>{
+      const p = PRODUCTS[id];
+      subtotal += (p.price * (p.qty||1));
     });
-
-    cartTotal.innerText = total;
-    cartCount.innerText = count;
+    // set demo orig (maybe higher) and final
+    document.getElementById('finalTotal').innerText = fmt(subtotal);
+    // for demo we'll show a large original crossed price
+    const orig = subtotal * 5; // arbitrary to mimic screenshot
+    document.getElementById('origTotal').innerText = orig.toLocaleString();
   }
 
-  function changeQty(index, val) {
-    cart[index].qty += val;
-    if (cart[index].qty <= 0) cart.splice(index, 1);
-    updateCart();
+  // wire qty selectors
+  document.querySelectorAll('.qty-select').forEach(sel=>{
+    sel.addEventListener('change', e=>{
+      const pid = sel.getAttribute('data-for');
+      const val = parseInt(sel.value,10);
+      if(PRODUCTS[pid]){
+        PRODUCTS[pid].qty = val;
+        recalcTotals();
+      }
+    });
+  });
+
+  // remove button
+  document.querySelectorAll('.remove-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const pid = btn.getAttribute('data-for');
+      const el = document.querySelector('.product[data-id="'+pid+'"]');
+      if(el){
+        el.remove();
+        delete PRODUCTS[pid];
+        recalcTotals();
+      }
+    });
+  });
+
+  // insurance demo
+  function addInsurance(){
+    alert('Insurance added (demo).');
   }
 
-  function removeItem(index) {
-    cart.splice(index, 1);
-    updateCart();
-  }
+  // place order
+  document.getElementById('placeOrder').addEventListener('click', ()=>{
+    alert('Proceed to checkout (demo).');
+  });
 
-  function openCart() {
-    document.getElementById("cartBox").style.transform = "translateX(0)";
-  }
+  // initial calc
+  recalcTotals();
 
-  function closeCart() {
-    document.getElementById("cartBox").style.transform = "translateX(100%)";
-  }
+  /* Accessibility / small helpers: if you want to dynamically add more products
+     create elements with data-id "p2", "p3" and add PRODUCTS.p2 = {price:..., qty:1}
+  */
 </script>
-
 </body>
 </html>
