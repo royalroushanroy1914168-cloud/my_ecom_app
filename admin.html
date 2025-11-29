@@ -1,1 +1,115 @@
+<!-- public/admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin - Flipkart Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Admin Panel</div>
+    <a href="index.html">← Home</a>
+  </header>
+
+  <main class="container">
+    <h1>Admin - Manage Products</h1>
+
+    <div id="admin-login">
+      <h3>Admin Login</h3>
+      <input id="adm-email" placeholder="email" value="admin@flipkart.local" />
+      <input id="adm-pass" placeholder="password" type="password" value="admin123" />
+      <button id="adm-login-btn">Login</button>
+      <div id="adm-msg"></div>
+    </div>
+
+    <div id="admin-panel" style="display:none;">
+      <h3>Create Product</h3>
+      <input id="p-title" placeholder="Title" /><br/>
+      <input id="p-price" placeholder="Price" /><br/>
+      <input id="p-category" placeholder="Category" /><br/>
+      <input id="p-image" placeholder="Image URL" /><br/>
+      <textarea id="p-desc" placeholder="Description"></textarea><br/>
+      <button id="create-product">Create</button>
+
+      <h3>Existing Products</h3>
+      <div id="admin-products"></div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('adm-login-btn').addEventListener('click', async ()=>{
+      const email = document.getElementById('adm-email').value;
+      const password = document.getElementById('adm-pass').value;
+      const res = await fetch('/api/auth/login', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email,password})
+      });
+      const data = await res.json();
+      if (res.ok && data.user && data.user.is_admin) {
+        localStorage.setItem('token', data.token);
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'block';
+        loadAdminProducts();
+      } else {
+        document.getElementById('adm-msg').innerText = data.error || 'Login failed';
+      }
+    });
+
+    document.getElementById('create-product').addEventListener('click', async ()=>{
+      const token = localStorage.getItem('token');
+      const body = {
+        title: document.getElementById('p-title').value,
+        description: document.getElementById('p-desc').value,
+        price: parseInt(document.getElementById('p-price').value || '0'),
+        category: document.getElementById('p-category').value,
+        image: document.getElementById('p-image').value
+      };
+      const res = await fetch('/api/admin/products', {
+        method:'POST',
+        headers: {'Content-Type':'application/json', 'Authorization':'Bearer ' + token},
+        body: JSON.stringify(body)
+      });
+      const r = await res.json();
+      if (res.ok) {
+        alert('Created product id ' + r.id);
+        loadAdminProducts();
+      } else alert(r.error || 'Failed');
+    });
+
+    async function loadAdminProducts() {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/products');
+      const list = await res.json();
+      const out = document.getElementById('admin-products');
+      out.innerHTML = '';
+      list.forEach(p=>{
+        const d = document.createElement('div');
+        d.className = 'product-card';
+        d.innerHTML = `
+          <img src="${p.image}" />
+          <h4>${p.title}</h4>
+          <p>₹${p.price}</p>
+          <p>${p.category}</p>
+          <button onclick="deleteProduct(${p.id})">Delete</button>
+        `;
+        out.appendChild(d);
+      });
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete product?')) return;
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/admin/products/' + id, {
+        method:'DELETE', headers:{ 'Authorization': 'Bearer ' + token }
+      });
+      const r = await res.json();
+      if (res.ok) {
+        alert('Deleted');
+        loadAdminProducts();
+      } else alert(r.error || 'Failed');
+    }
+  </script>
+</body>
+</html>
 
