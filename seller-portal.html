@@ -1,1 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>INDIASHOP — Seller Portal</title>
+  <style>
+    :root{--brand:#ff6f00;--muted:#666;--bg:#f6f7fb}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+    header{background:#fff;padding:12px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(2,6,23,0.06)}
+    header h1{margin:0;font-size:18px;color:var(--brand)}
+    .container{max-width:1100px;margin:18px auto;padding:0 12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .card{background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+    .card h3{margin:0 0 8px}
+    .kpi{display:flex;justify-content:space-between;gap:12px}
+    .kpi .item{flex:1;padding:12px;background:linear-gradient(180deg,#fff,#fff);border-radius:8px;text-align:center}
+    .btn{background:var(--brand);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    form label{display:block;margin:8px 0 4px;font-size:13px}
+    input[type=text], input[type=email], input[type=number], select, textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #e6e6e6}
+    .row{display:flex;gap:12px}
+    .row .col{flex:1}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+    .small{font-size:13px;color:var(--muted)}
+    .file-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .file-preview img{width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ddd}
+    .tabs{display:flex;gap:8px;margin-bottom:12px}
+    .tabs button{background:#fff;border:1px solid #eee;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .tabs button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .actions{display:flex;gap:8px;align-items:center}
+    @media (max-width:900px){.grid-3{grid-template-columns:1fr}.row{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>INDIASHOP Seller Portal</h1>
+    <div style="margin-left:auto;" class="actions">
+      <button id="logoutBtn" class="btn">Logout</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Dashboard KPIs -->
+    <section class="card" style="margin-bottom:12px">
+      <div class="kpi">
+        <div class="item"><div class="small">Today's Sales</div><div id="kpiSales">₹0</div></div>
+        <div class="item"><div class="small">Orders</div><div id="kpiOrders">0</div></div>
+        <div class="item"><div class="small">Earnings</div><div id="kpiEarnings">₹0</div></div>
+      </div>
+    </section>
+
+    <div class="grid-3" style="margin-bottom:12px">
+      <!-- Seller Registration & KYC -->
+      <div class="card">
+        <h3>Seller Registration &amp; KYC</h3>
+        <form id="kycForm">
+          <label>Shop Name</label>
+          <input id="shopName" type="text" required />
+          <label>Owner Name</label>
+          <input id="ownerName" type="text" required />
+          <label>Contact Email</label>
+          <input id="email" type="email" />
+          <label>KYC Document (mock upload)</label>
+          <input id="kycFile" type="file" accept="image/*,.pdf" />
+          <div class="small">Status: <span id="kycStatus">Not Submitted</span></div>
+          <div style="margin-top:8px"><button class="btn" type="button" id="submitKyc">Submit KYC</button></div>
+        </form>
+      </div>
+
+      <!-- Product Upload -->
+      <div class="card">
+        <h3>Product Upload</h3>
+        <form id="productForm">
+          <label>Title</label>
+          <input id="pTitle" type="text" required />
+          <label>Category</label>
+          <select id="pCategory"><option>Mobiles</option><option>Fashion</option><option>Electronics</option><option>Home</option></select>
+          <div class="row">
+            <div class="col">
+              <label>Price (₹)</label>
+              <input id="pPrice" type="number" />
+            </div>
+            <div class="col">
+              <label>Stock Qty</label>
+              <input id="pStock" type="number" />
+            </div>
+          </div>
+          <label>Images</label>
+          <input id="pImages" type="file" accept="image/*" multiple />
+          <div class="file-preview" id="preview"></div>
+          <div style="margin-top:8px"><button class="btn" id="addProduct" type="button">Add Product</button></div>
+        </form>
+      </div>
+
+      <!-- Inventory Management -->
+      <div class="card">
+        <h3>Inventory Management</h3>
+        <div class="small">Quick view of your uploaded products</div>
+        <div style="margin-top:8px;max-height:260px;overflow:auto">
+          <table id="inventoryTable"><thead><tr><th>Product</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders and Reports -->
+    <div class="grid-3" style="margin-bottom:12px">
+      <div class="card" style="grid-column:span 2">
+        <h3>Order Management</h3>
+        <div class="small">Latest orders placed for your products</div>
+        <div style="margin-top:10px;max-height:320px;overflow:auto">
+          <table id="ordersTable"><thead><tr><th>Order ID</th><th>Product</th><th>Qty</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Payment Settlement Report</h3>
+        <div class="small">Settlements and payouts</div>
+        <div style="margin-top:8px;max-height:320px;overflow:auto">
+          <table id="payoutTable"><thead><tr><th>Date</th><th>Orders</th><th>Amount</th><th>Settled</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sales Graph placeholder -->
+    <div class="card" style="margin-bottom:12px">
+      <h3>Sales & Earnings Dashboard</h3>
+      <div class="small">(Placeholder) Summary of performance — integrate charts later</div>
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <div style="flex:1;padding:12px;background:#fff;border-radius:8px;text-align:center">Total Sales<br><strong id="totalSales">₹0</strong></div>
+        <div style="flex:1;padding:12px;background:#fff;border-radius:8px;text-align:center">Total Orders<br><strong id="totalOrders">0</strong></div>
+        <div style="flex:1;padding:12px;background:#fff;border-radius:8px;text-align:center">Balance<br><strong id="totalBalance">₹0</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple front-end demo logic using localStorage to persist data per seller
+    const PROD_KEY = 'indiashop_seller_products_v1';
+    const ORD_KEY = 'indiashop_seller_orders_v1';
+    const PAY_KEY = 'indiashop_seller_payouts_v1';
+
+    // Helpers
+    const read = (k)=> JSON.parse(localStorage.getItem(k) || '[]');
+    const write = (k,v)=> localStorage.setItem(k, JSON.stringify(v));
+
+    // KYC
+    document.getElementById('submitKyc').addEventListener('click', ()=>{
+      const shop = document.getElementById('shopName').value.trim();
+      if(!shop){ alert('Enter shop name'); return; }
+      document.getElementById('kycStatus').textContent = 'Submitted (Under Review)';
+      toast('KYC submitted — mock status set');
+    });
+
+    // Product images preview
+    document.getElementById('pImages').addEventListener('change', (e)=>{
+      const files = Array.from(e.target.files); const prev = document.getElementById('preview'); prev.innerHTML='';
+      files.slice(0,6).forEach(f=>{ const r=new FileReader(); r.onload=(ev)=>{ const img=document.createElement('img'); img.src=ev.target.result; prev.appendChild(img); }; r.readAsDataURL(f); });
+    });
+
+    // Add product
+    document.getElementById('addProduct').addEventListener('click', ()=>{
+      const title = document.getElementById('pTitle').value.trim();
+      const cat = document.getElementById('pCategory').value;
+      const price = Number(document.getElementById('pPrice').value||0);
+      const stock = Number(document.getElementById('pStock').value||0);
+      if(!title){ alert('Enter product title'); return; }
+      const products = read(PROD_KEY);
+      const id = Date.now();
+      // store only minimal product data + image placeholders
+      products.unshift({id,title,cat,price,stock,images:[]});
+      write(PROD_KEY, products);
+      renderInventory();
+      toast('Product added');
+      // clear form
+      document.getElementById('productForm').reset(); document.getElementById('preview').innerHTML='';
+    });
+
+    // Inventory render
+    function renderInventory(){
+      const products = read(PROD_KEY);
+      const tbody = document.querySelector('#inventoryTable tbody'); tbody.innerHTML='';
+      products.forEach(p=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${p.title}<div class=\"small\">${p.cat}</div></td><td>₹${p.price}</td><td>${p.stock}</td><td><button class=\"btn small\" data-act=\"edit\" data-id=\"${p.id}\">Edit</button> <button class=\"btn small\" data-act=\"del\" data-id=\"${p.id}\">Delete</button></td>`;
+        tbody.appendChild(tr);
+      });
+      updateKPIs();
+    }
+
+    // Orders mock data and render
+    function seedOrders(){
+      let orders = read(ORD_KEY);
+      if(orders.length===0){
+        orders = [
+          {id:'ORD'+(1001),product:'Smartphone Model A',qty:1,amount:12999,status:'Pending'},
+          {id:'ORD'+(1002),product:'Running Shoes',qty:2,amount:6998,status:'Shipped'},
+          {id:'ORD'+(1003),product:'Casual Shirt',qty:1,amount:799,status:'Delivered'}
+        ]; write(ORD_KEY,orders);
+      }
+    }
+    function renderOrders(){
+      const orders = read(ORD_KEY); const tbody=document.querySelector('#ordersTable tbody'); tbody.innerHTML='';
+      orders.forEach(o=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${o.id}</td><td>${o.product}</td><td>${o.qty}</td><td>₹${o.amount}</td><td>${o.status}</td><td><button class=\"btn\" data-act=\"update\" data-id=\"${o.id}\">Update</button></td>`; tbody.appendChild(tr); });
+    }
+
+    // Payouts mock
+    function seedPayouts(){ if(read(PAY_KEY).length===0){ write(PAY_KEY,[{date:'2025-11-01',orders:12,amount:45000,settled:'Yes'},{date:'2025-10-01',orders:8,amount:29800,settled:'Yes'}]); } }
+    function renderPayouts(){ const rows = read(PAY_KEY); const tbody=document.querySelector('#payoutTable tbody'); tbody.innerHTML=''; rows.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.date}</td><td>${r.orders}</td><td>₹${r.amount}</td><td>${r.settled}</td>`; tbody.appendChild(tr); }); }
+
+    // Delegated button actions (inventory, orders)
+    document.addEventListener('click', (e)=>{
+      const b = e.target; if(b.dataset && b.dataset.act){ const act=b.dataset.act; const id=Number(b.dataset.id);
+        if(act==='del'){ let prods=read(PROD_KEY); prods=prods.filter(p=>p.id!==id); write(PROD_KEY,prods); renderInventory(); toast('Product deleted'); }
+        if(act==='edit'){ const prods=read(PROD_KEY); const p=prods.find(x=>x.id===id); if(p){ const newStock = prompt('Set new stock for '+p.title, p.stock); if(newStock!==null){ p.stock = Number(newStock); write(PROD_KEY, prods); renderInventory(); toast('Stock updated'); } } }
+        if(act==='update'){ // update order status
+          let orders = read(ORD_KEY); const o = orders.find(x=>x.id===b.dataset.id); if(o){ const ns = prompt('Set status for '+o.id, o.status); if(ns!==null){ o.status = ns; write(ORD_KEY,orders); renderOrders(); toast('Order updated'); updateKPIs(); } }
+        }
+      }
+    });
+
+    // KPIs and totals
+    function updateKPIs(){ const orders = read(ORD_KEY); const products = read(PROD_KEY); const sales = orders.reduce((s,o)=>s+ (o.amount||0),0); const cnt = orders.length; const earnings = Math.round(sales * 0.9); // mock margin
+      document.getElementById('kpiSales').textContent = '₹'+sales; document.getElementById('kpiOrders').textContent = cnt; document.getElementById('kpiEarnings').textContent = '₹'+earnings;
+      document.getElementById('totalSales').textContent = '₹'+sales; document.getElementById('totalOrders').textContent = cnt; document.getElementById('totalBalance').textContent = '₹'+earnings;
+    }
+
+    // small toast
+    function toast(t){ const el=document.createElement('div'); el.textContent=t; el.style.position='fixed'; el.style.right='16px'; el.style.bottom='16px'; el.style.background='#111'; el.style.color='#fff'; el.style.padding='8px 12px'; el.style.borderRadius='8px'; document.body.appendChild(el); setTimeout(()=>el.remove(),900); }
+
+    // init
+    (function init(){ seedOrders(); seedPayouts(); renderInventory(); renderOrders(); renderPayouts(); updateKPIs(); })();
+  </script>
+</body>
+</html>
 
