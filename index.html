@@ -122,91 +122,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My E-commerce App</title>
+  <title>Settings Only</title>
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
       background-color: white;
+      font-family: Arial, sans-serif;
     }
 
-    /* TOP BAR */
+    /* TOP BAR WITH ONLY SETTINGS ICON */
     .topbar {
-      background-color: #2196F3;
+      background-color: #2196F3; /* blue */
       padding: 15px;
       display: flex;
-      justify-content: space-between; /* left + right */
+      justify-content: flex-end; /* move to right side */
       align-items: center;
-      color: black;
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    /* SETTINGS ICON ON RIGHT */
     .settings {
-      font-size: 30px;
+      font-size: 32px;
       cursor: pointer;
       user-select: none;
-    }
-
-    /* MAIN CONTENT */
-    .content {
-      height: calc(100vh - 140px);
-      padding: 20px;
-      font-size: 22px;
-    }
-
-    /* BOTTOM NAVIGATION */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: white;
-      border-top: 1px solid #ccc;
-      padding: 15px 0;
-      display: flex;
-      justify-content: space-around;
-      font-size: 20px;
-      font-weight: 500;
-    }
-
-    .bottom-nav a {
-      text-decoration: none;
-      color: black;
-    }
-
-    .bottom-nav a:hover {
-      color: #2196F3;
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
+  <!-- ONLY SETTING ICON AT TOP RIGHT -->
   <div class="topbar">
-    <div class="logo">My E-commerce App</div>
-    
-    <!-- REAL SETTINGS ICON -->
     <div class="settings">⚙️</div>
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="content">
-    Welcome to the Home Page!
-  </div>
-
-  <!-- BOTTOM NAVIGATION -->
-  <div class="bottom-nav">
-    <a href="#">Home</a>
-    <a href="#">Account</a>
-    <a href="#">Cart</a>
-    <a href="#">Categories</a>
   </div>
 
 </body>
 </html>
+
