@@ -187,6 +187,242 @@
 
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My App</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: white;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      background-color: #2196F3;
+      padding: 15px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      color: black;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    /* SETTINGS ICON */
+    .settings {
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    /* UPLOAD BOX - now in BETWEEN top bar & bottom nav */
+    .upload-box {
+      margin: 20px;
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      background: #f3f3f3;
+    }
+
+    .upload-box input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 18px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .upload-btn {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* PRODUCT GRID */
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 20px;
+      margin-bottom: 80px; /* space above bottom nav */
+    }
+
+    .product-card {
+      width: 160px;
+      background: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* PRODUCT MODAL */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal {
+      background: white;
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .modal img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .close-btn {
+      width: 100%;
+      padding: 10px;
+      background: red;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ccc;
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-around;
+      font-size: 20px;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="settings">⚙️</div>
+  </div>
+
+  <!-- UPLOAD SECTION (IN BETWEEN) -->
+  <div class="upload-box">
+    <h2>Add Product</h2>
+
+    <input type="file" id="productImage" accept="image/*">
+    <input type="text" id="productName" placeholder="Product name">
+    <input type="number" id="productPrice" placeholder="Product price (₹)">
+
+    <button class="upload-btn" onclick="addProduct()">Add Product</button>
+  </div>
+
+  <!-- PRODUCT LIST -->
+  <div class="product-list" id="productList"></div>
+
+  <!-- PRODUCT DETAILS POPUP -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <img id="modalImage">
+      <h2 id="modalName"></h2>
+      <h3 id="modalPrice"></h3>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bottom-nav">
+    <a href="#">Home</a>
+    <a href="#">Account</a>
+    <a href="#">Cart</a>
+    <a href="#">Categories</a>
+  </div>
+
+  <script>
+    function addProduct() {
+      const imgFile = document.getElementById("productImage").files[0];
+      const name = document.getElementById("productName").value;
+      const price = document.getElementById("productPrice").value;
+
+      if (!imgFile || !name || !price) {
+        alert("Please fill all fields!");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageURL = e.target.result;
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${imageURL}">
+          <div>${name}</div>
+          <div style="color:green;">₹${price}</div>
+        `;
+
+        card.onclick = function() {
+          showModal(imageURL, name, price);
+        };
+
+        document.getElementById("productList").appendChild(card);
+      };
+
+      reader.readAsDataURL(imgFile);
+
+      document.getElementById("productName").value = "";
+      document.getElementById("productPrice").value = "";
+      document.getElementById("productImage").value = "";
+    }
+
+    function showModal(img, name, price) {
+      document.getElementById("modalImage").src = img;
+      document.getElementById("modalName").textContent = name;
+      document.getElementById("modalPrice").textContent = "₹" + price;
+      document.getElementById("modalBg").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modalBg").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
 
      
    
