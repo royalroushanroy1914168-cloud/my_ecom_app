@@ -1,213 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>My E-commerce App</title>
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f2f2f2;
-    }
-    header {
-      background: #2874f0;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 22px;
-    }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding: 10px;
-    }
-    .card {
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .card img {
-      width: 100%;
-      border-radius: 8px;
-    }
-    button {
-      padding: 8px 12px;
-      background: #2874f0;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin-top: 5px;
+    /* simple responsive styles */
+    body { font-family: Arial, sans-serif; margin:0; background:#f2f2f2; }
+    header { background:#2874f0; color:#fff; padding:16px; text-align:center; position:sticky; top:0; }
+    header .top { display:flex; justify-content:space-between; align-items:center; max-width:1100px; margin:0 auto; }
+    header a { color:#fff; text-decoration:none; font-weight:600; }
+    .container { max-width:1100px; margin:24px auto; padding:0 12px; }
+    h2 { font-size:32px; margin:12px 0; }
+    .products { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+    .card { background:#fff; padding:20px; border-radius:10px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+    .card img { width:100%; height:180px; object-fit:cover; border-radius:10px; }
+    .card h3 { margin:14px 0 8px; font-size:20px; }
+    .price { color:#222; font-size:18px; margin-bottom:8px; }
+    .btn { background:#2874f0; color:#fff; padding:10px 14px; border:0; border-radius:6px; cursor:pointer; }
+    .btn:active { transform:scale(.99); }
+    .cart-count { background:#fff; color:#2874f0; padding:4px 8px; border-radius:16px; font-weight:700; margin-left:8px; }
+    @media(max-width:600px){
+      header .top { flex-direction:column; gap:8px; }
+      .card img { height:160px; }
     }
   </style>
 </head>
-
 <body>
-
-<header>My E-commerce App</header>
-
-<h2 style="padding:10px">Products</h2>
-
-<div class="products" id="productGrid"></div>
-
-<script>
-const products = [
-  {
-    id: 1,
-    title: "Phone A",
-    price: "₹9,999",
-    img: "https://picsum.photos/300?random=1"
-  },
-  {
-    id: 2,
-    title: "Shoes",
-    price: "₹1,299",
-    img: "https://picsum.photos/300?random=2"
-  },
-  {
-    id: 3,
-    title: "Earbuds",
-    price: "₹1,799",
-    img: "https://picsum.photos/300?random=3"
-  }
-];
-
-
-function loadProducts() {
-  const grid = document.getElementById("productGrid");
-  products.forEach(p => {
-    grid.innerHTML += `
-      <div class="card">
-        <img src="${p.img}">
-        <h3>${p.title}</h3>
-        <p>${p.price}</p>
-        <button>Add to Cart</button>
+  <header>
+    <div class="top">
+      <div><a href="./">My E-commerce App</a></div>
+      <div>
+        <a href="cart.html" id="cartLink">Cart <span id="cartCount" class="cart-count">0</span></a>
       </div>
-    `;
-  });
-}
+    </div>
+  </header>
 
-loadProducts();
-</script>
+  <main class="container">
+    <h2>Products</h2>
+    <div class="products" id="productGrid">
+      <!-- product cards injected here -->
+    </div>
+  </main>
 
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My E-commerce App</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f2f2f2;
-        }
-
-        header {
-            background: #2874f0;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 22px;
-        }
-
-        h2 {
-            padding: 15px;
-        }
-
-        .products {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 15px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0px 0px 6px #ccc;
-        }
-
-        .card img {
-            width: 100%;
-            border-radius: 8px;
-        }
-
-        button {
-            padding: 8px 12px;
-            background: #2874f0;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #0f59c9;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 600px) {
-            .products {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<header>My E-commerce App</header>
-
-<h2>Products</h2>
-
-<div class="products" id="productGrid"></div>
-
-<script>
+  <script>
+    // Demo product list
     const products = [
-        { id: 1, title: "Phone A", price: "₹9,999", img: "https://via.placeholder.com/300x200?text=Phone" },
-        { id: 2, title: "Shoes", price: "₹1,299", img: "https://via.placeholder.com/300x200?text=Shoes" },
-        { id: 3, title: "Earbuds", price: "₹1,799", img: "https://via.placeholder.com/300x200?text=Earbuds" }
+      { id:1, title:"Phone A", price:9999, img:"https://via.placeholder.com/400x300?text=Phone" },
+      { id:2, title:"Shoes", price:1299, img:"https://via.placeholder.com/400x300?text=Shoes" },
+      { id:3, title:"Earbuds", price:1799, img:"https://via.placeholder.com/400x300?text=Earbuds" }
     ];
 
-    function loadProducts() {
-        const grid = document.getElementById("productGrid");
-        grid.innerHTML = "";
-
-        products.forEach(p => {
-            grid.innerHTML += `
-                <div class="card">
-                    <img src="${p.img}" alt="${p.title}" onerror="this.src='https://picsum.photos/300/200?random'">
-                    <h3>${p.title}</h3>
-                    <p>${p.price}</p>
-                    <button onclick="addToCart(${p.id})">Add to Cart</button>
-                </div>
-            `;
-        });
+    // Render products
+    function renderProducts(){
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      products.forEach(p=>{
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          <img src="${p.img}" alt="${p.title}">
+          <h3>${p.title}</h3>
+          <div class="price">₹${p.price.toLocaleString()}</div>
+          <button class="btn" onclick="addToCart(${p.id})">Add to Cart</button>
+        `;
+        grid.appendChild(el);
+      });
     }
 
-    function addToCart(id) {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const product = products.find(item => item.id === id);
-        
-        cart.push(product);
-        localStorage.setItem("cart", JSON.stringify(cart));
-
-        alert(product.title + " added to cart!");
+    // Save cart to localStorage
+    function saveCart(cart){
+      localStorage.setItem('my_cart', JSON.stringify(cart));
+      updateCartCount();
     }
 
-    loadProducts();
-</script>
+    // Get current cart
+    function getCart(){
+      const raw = localStorage.getItem('my_cart');
+      return raw ? JSON.parse(raw) : [];
+    }
 
+    // Add to cart (id only)
+    function addToCart(id){
+      const p = products.find(x=>x.id===id);
+      if(!p) return;
+      const cart = getCart();
+      // If item exists increase qty, else add
+      const existing = cart.find(item => item.id === id);
+      if(existing){
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
+        cart.push({ id:p.id, title:p.title, price:p.price, img:p.img, qty:1 });
+      }
+      saveCart(cart);
+      // small feedback
+      alert(`${p.title} added to cart`);
+    }
+
+    // Update cart count in header
+    function updateCartCount(){
+      const cart = getCart();
+      const totalQty = cart.reduce((s,it)=>s+(it.qty||1),0);
+      const el = document.getElementById('cartCount');
+      el.textContent = totalQty;
+    }
+
+    // Initialize
+    renderProducts();
+    updateCartCount();
+  </script>
 </body>
 </html>
-
