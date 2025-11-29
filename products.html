@@ -1,1 +1,62 @@
+<!-- public/products.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Products - Flipkart Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Flipkart Clone</div>
+    <div class="nav-actions">
+      <input id="search" placeholder="Search..." />
+      <button id="btn-search">Search</button>
+      <a href="cart.html" target="_blank">Cart (<span id="cart-count">0</span>)</a>
+      <span id="user-area"></span>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Products</h1>
+    <div id="product-list" class="product-grid"></div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    function loadProducts(q='') {
+      let url = '/api/products';
+      if (q) url += '?q=' + encodeURIComponent(q);
+      fetch(url).then(r=>r.json()).then(data=>{
+        const list = document.getElementById('product-list');
+        list.innerHTML = '';
+        data.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img src="${p.image}" alt="${p.title}" />
+            <h3>${p.title}</h3>
+            <p>₹${p.price}</p>
+            <p>${p.category}</p>
+            <button onclick="openProduct(${p.id})">View</button>
+            <button onclick="addToLocalCart(${p.id}, '${p.title}', ${p.price})">Add to Cart</button>
+          `;
+          list.appendChild(card);
+        });
+      });
+    }
+
+    const urlParams = new URLSearchParams(location.search);
+    const q = urlParams.get('q') || localStorage.getItem('lastSearch') || '';
+    document.getElementById('search').value = q;
+    loadProducts(q);
+
+    document.getElementById('btn-search').addEventListener('click', ()=>{
+      const s = document.getElementById('search').value.trim();
+      localStorage.setItem('lastSearch', s);
+      loadProducts(s);
+    });
+  </script>
+</body>
+</html>
 
