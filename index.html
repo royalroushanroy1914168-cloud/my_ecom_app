@@ -56,10 +56,26 @@
 
 <script>
 const products = [
-  { id: 1, title: "Phone A", price: "₹9,999", img: "https://via.placeholder.com/300x200?text=Phone" },
-  { id: 2, title: "Shoes", price: "₹1,299", img: "https://via.placeholder.com/300x200?text=Shoes" },
-  { id: 3, title: "Earbuds", price: "₹1,799", img: "https://via.placeholder.com/300x200?text=Earbuds" }
+  {
+    id: 1,
+    title: "Phone A",
+    price: "₹9,999",
+    img: "https://picsum.photos/300?random=1"
+  },
+  {
+    id: 2,
+    title: "Shoes",
+    price: "₹1,299",
+    img: "https://picsum.photos/300?random=2"
+  },
+  {
+    id: 3,
+    title: "Earbuds",
+    price: "₹1,799",
+    img: "https://picsum.photos/300?random=3"
+  }
 ];
+
 
 function loadProducts() {
   const grid = document.getElementById("productGrid");
