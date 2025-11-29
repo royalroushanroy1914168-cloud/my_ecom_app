@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My E-commerce App</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+    }
+    header {
+      background: #2874f0;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+    }
+    .card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      background: #2874f0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>My E-commerce App</header>
+
+<h2 style="padding:10px">Products</h2>
+
+<div class="products" id="productGrid"></div>
+
+<script>
+const products = [
+  { id: 1, title: "Phone A", price: "₹9,999", img: "https://via.placeholder.com/300x200?text=Phone" },
+  { id: 2, title: "Shoes", price: "₹1,299", img: "https://via.placeholder.com/300x200?text=Shoes" },
+  { id: 3, title: "Earbuds", price: "₹1,799", img: "https://via.placeholder.com/300x200?text=Earbuds" }
+];
+
+function loadProducts() {
+  const grid = document.getElementById("productGrid");
+  products.forEach(p => {
+    grid.innerHTML += `
+      <div class="card">
+        <img src="${p.img}">
+        <h3>${p.title}</h3>
+        <p>${p.price}</p>
+        <button>Add to Cart</button>
+      </div>
+    `;
+  });
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
 
