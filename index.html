@@ -2,35 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>E-commerce</title>
+  <title>E-commerce App</title>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
+      background-color: white;
     }
 
-    /* Top header */
-    .header {
-      background-color: blue;
-      padding: 20px;
-      color: white;
-      font-size: 42px;
+    /* TOP BAR */
+    .topbar {
+      background-color: #2196F3;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;  /* left + right */
+      align-items: center;
+      color: black;
+    }
+
+    /* COMPANY NAME */
+    .logo {
+      font-size: 28px;
       font-weight: bold;
-      text-align: left;
+    }
+
+    /* SETTINGS ICON */
+    .settings {
+      font-size: 30px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* MAIN CONTENT */
+    .content {
+      height: calc(100vh - 140px);
+      padding: 20px;
+      font-size: 22px;
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      border-top: 1px solid #ccc;
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-around;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .bottom-nav a:hover {
+      color: #2196F3;
     }
   </style>
-
 </head>
 <body>
 
-  <!-- Company Name at the TOP -->
-  <div class="header">
-    E-commerce
+  <!-- TOP BAR WITH COMPANY NAME + SETTINGS -->
+  <div class="topbar">
+    <div class="logo">E-commerce</div>
+    <div class="settings">⚙️</div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+    Welcome to the Home Page!
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bottom-nav">
+    <a href="#">Home</a>
+    <a href="#">Account</a>
+    <a href="#">Cart</a>
+    <a href="#">Categories</a>
   </div>
 
 </body>
 </html>
+
 
 
 
